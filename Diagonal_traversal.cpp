@@ -26,56 +26,40 @@ Node* newNode(int key)
 }
 
 
-void zig_zag(Node* root)
+void DiagonalPrintUtil(Node* root)
 {
   if(root==NULL)
     return;
+}
 
-  stack<struct Node* > currentlevel;
-  stack<struct Node*> nextlevel;
-  currentlevel.push(root);
-  bool leftorright=true;
-  while(!currentlevel.empty())
+void diagonalPrintUtil(Node* root,int d,map<int,vector<int>> &diagonalPPrint)
+{
+  if(root==NULL)
+    return;
+  diagonalPPrint[d].push_back(root->data);
+
+  diagonalPrintUtil(root->left,d+1,diagonalPPrint);
+
+  diagonalPrintUtil(root->right,d,diagonalPPrint);
+
+}
+
+
+void DiagonalPrint(Node* root)
+{
+  map<int,vector<int>> diagonalPPrint;
+  diagonalPrintUtil(root,0,diagonalPPrint);
+
+  cout<<"Diagonal Print: "<<endl;
+  for(auto it: diagonalPPrint)
   {
-    struct Node* temp=currentlevel.top();
-    currentlevel.pop();
-    if(temp)
+    vector<int> v=it.second;
+    for(auto it: v)
     {
-      cout<<temp->data<<" ";
+      cout<<it<<" ";
     }
-
-    if(leftorright)
-    {
-      if(temp->left)
-      {
-        nextlevel.push(temp->left);
-      }
-      if(temp->right)
-      {
-        nextlevel.push(temp->right);
-      }
-    }
-    else
-    {
-      if(temp->right)
-      {
-        nextlevel.push(temp->right);
-      }
-      if(temp->left)
-      {
-        nextlevel.push(temp->left);
-      }
-    }
-
-    if(currentlevel.empty())
-    {
-      leftorright=!leftorright;
-      swap(currentlevel,nextlevel);
-    }
-
+    cout<<endl;
   }
-
-
 }
 
 int main()
@@ -94,7 +78,7 @@ int main()
     root->right->left = newNode(6);
     root->right->right = newNode(7);
 
-    zig_zag(root);
+    DiagonalPrint(root);
 
 
 
